@@ -1,0 +1,17 @@
+Project proposal
+
+The motivations and background:
+This project is for multi-agent planning in games. A natural planning method can make a game realistic and avoid potential issues (by issues, I really mean bugs). A direct motivation is, this is the only given topic that I am interested in and I think I can make something interesting under this topic. A more indirect motivation is, I didn't consider this as a hard problem before a lecture of Professor Dinesh. This is a good opportunity to pick up something I had an impression and do something for fun. 
+
+
+
+My idea is physical-inspired and partially adopts the idea of spring linkage. But instead of a mutual force, I define this force as an one-directional force for some cases (although forces are mutual is the truth from all Physics textbooks). For example, if a person reduces his own speed of walking, his change will only affect the people walking behind him, but not the person who walks in front of him.
+
+State-of-art and new challenges
+
+Proposed tasks
+
+Some possible ideas or alternatives that you plan to pursue or evaluate
+
+Minimum expected contribution or accomplishment(s)
+
