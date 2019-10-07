@@ -1,17 +1,22 @@
 Project proposal
 
 The motivations and background:
-This project is for multi-agent planning in games. A natural planning method can make a game realistic and avoid potential issues (by issues, I really mean bugs). A direct motivation is, this is the only given topic that I am interested in and I think I can make something interesting under this topic. A more indirect motivation is, I didn't consider this as a hard problem before a lecture of Professor Dinesh. This is a good opportunity to pick up something I had an impression and do something for fun. 
-
-
-
-My idea is physical-inspired and partially adopts the idea of spring linkage. But instead of a mutual force, I define this force as an one-directional force for some cases (although forces are mutual is the truth from all Physics textbooks). For example, if a person reduces his own speed of walking, his change will only affect the people walking behind him, but not the person who walks in front of him.
+This project is trying to immitate the natural human flow under certain scenarios. It is very important for making a realistic game, and this would be very valuable for testing the design of buildings. For example, test a cinema if it can be evacuated in a certain period of time.
 
 State-of-art and new challenges
+In 2006, AirBus company hired more than 800 people to do an evacuation test on AirBus A380 aircraft. It is a standard test for not just AirBus but also Boeing and other companies.
+There is a software called "Pathfinder" which focuses in evacuation simulation, which works pretty well according to the video on its website.
 
 Proposed tasks
+Let people pass turning corners without any reflux or stagnation;
+Avoid weird looking stuff;
+Try to make it as realistic as possible.
 
 Some possible ideas or alternatives that you plan to pursue or evaluate
+Calculate the gravity between humans to influence the movement;
+Use a repulsive force to push people away from being too close;
+Use physics-based heuristic functions for guiding through turnings and other special scenarios.
 
 Minimum expected contribution or accomplishment(s)
+Implement the algorithm and present the result in a unity-based application (no matter how it really performs).
 
