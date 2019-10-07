@@ -1,11 +1,15 @@
 Project proposal
 
 The motivations and background:
-This project is trying to immitate the natural human flow under certain scenarios. It is very important for making a realistic game, and this would be very valuable for testing the design of buildings. For example, test a cinema if it can be evacuated in a certain period of time.
+This project is trying to immitate the natural human flow under certain scenarios. It is very important
+for making a realistic game, and this would be very valuable for testing the design of buildings. For
+example, test a cinema if it can be evacuated in a certain period of time.
 
 State-of-art and new challenges
-In 2006, AirBus company hired more than 800 people to do an evacuation test on AirBus A380 aircraft. It is a standard test for not just AirBus but also Boeing and other companies.
-There is a software called "Pathfinder" which focuses in evacuation simulation, which works pretty well according to the video on its website.
+In 2006, AirBus company hired more than 800 people to do an evacuation test on AirBus A380 aircraft. It
+is a standard test for not just AirBus but also Boeing and other companies.
+There is a software called "Pathfinder" which focuses in evacuation simulation, which works pretty well
+according to the video on its website.
 
 Proposed tasks
 Let people pass turning corners without any reflux or stagnation;
@@ -18,5 +22,6 @@ Use a repulsive force to push people away from being too close;
 Use physics-based heuristic functions for guiding through turnings and other special scenarios.
 
 Minimum expected contribution or accomplishment(s)
-Implement the algorithm and present the result in a unity-based application (no matter how it really performs).
+Implement the algorithm and present the result in a unity-based application (no matter how it really 
+performs).
 
