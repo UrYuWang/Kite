@@ -22,6 +22,11 @@ Use a repulsive force to push people away from being too close;
 Use physics-based heuristic functions for guiding through turnings and other special scenarios.
 
 Minimum expected contribution or accomplishment(s)
-Implement the algorithm and present the result in a unity-based application (no matter how it really 
-performs).
 
+Early checkpoint:
+Testify the idea with some simple heuristic functions and simple structure models in Unity
+
+Final checkpoint:
+Implement what I have proposed on the previous slides, without guaranteeing the performance to be better
+than pathfinder. Pre-computation on the structure may be needed to boost the performance on the real-time 
+rendering.
