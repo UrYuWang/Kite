@@ -119,7 +119,7 @@ public class boundingstuff
         Vector3 linesegment = points[1] - points[0];
         Vector3 vert = (Vector3.Cross(linesegment, t.up)).normalized;
         Vector3 connect = vert * distance;
-        if (connect.y > 5)
+        if (connect.y > 1)
             return Vector3.zero;
         float forwardp = Vector3sum(Vector3.Project(connect, t.forward)) / Vector3sum(t.forward);
         float sidep = Vector3sum(Vector3.Project(connect, t.right)) / Vector3sum(t.right);

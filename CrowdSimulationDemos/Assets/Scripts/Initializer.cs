@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Initializer : MonoBehaviour
 {
@@ -104,19 +105,31 @@ public class Initializer : MonoBehaviour
                     cpair.Remove(new Vector2Int(i, j));
             }
         }
+        NavMeshHit hit;
+        float speed;
         for (int i = 0; i < number_of_agents; i++)
         {
             if (forces[i] != Vector3.zero)
             {
-                if (agents[i].GetComponent<agentcontroller>().agent.isStopped)
-                    agents[i].GetComponent<agentcontroller>().Stop();
-                agents[i].GetComponent<agentcontroller>().agent.Move(forces[i] * Time.fixedDeltaTime);
+                //if (agents[i].GetComponent<agentcontroller>().agent.isStopped)
+                //    agents[i].GetComponent<agentcontroller>().Stop();
+                if (NavMesh.SamplePosition(agents[i].transform.position + forces[i] * Time.fixedDeltaTime, out hit, 1.0f, NavMesh.AllAreas))
+                {
+                    agents[i].GetComponent<agentcontroller>().agent.Move(forces[i] * Time.fixedDeltaTime);
+                }
                 agents[i].GetComponent<agentcontroller>().Continue();
-                //agents[i].GetComponent<agentcontroller>().agent.ResetPath();
-                //agents[i].GetComponent<agentcontroller>().agent.velocity = agents[i].GetComponent<agentcontroller>().agent.velocity.magnitude * forces[i].normalized;
             }
             else
             {
+                if (!NavMesh.SamplePosition(agents[i].transform.position + forces[i] * Time.fixedDeltaTime, out hit, 1.0f, NavMesh.AllAreas))
+                {
+                    speed = agents[i].GetComponent<agentcontroller>().agent.speed;
+                    if (NavMesh.SamplePosition(agents[i].transform.position + forces[i] * Time.fixedDeltaTime, out hit, 5.0f, NavMesh.AllAreas))
+                    {
+                        agents[i].GetComponent<agentcontroller>().agent.Warp(hit.position);
+                        //agents[i].GetComponent<agentcontroller>().agent.ResetPath();
+                    }
+                }
                 agents[i].GetComponent<agentcontroller>().Continue();
             }
             forces[i] = Vector3.zero;

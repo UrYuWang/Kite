@@ -1870,7 +1870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4eedeab72f6b494f82b4b1a7c48e29c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  number_of_agents: 50
+  number_of_agents: 15
   op: 3
   master: {fileID: 1624752132170550599, guid: 2937b6d63ec8b3b4a84ca36468831c75, type: 3}
   nonmaster: {fileID: 5276621793940294945, guid: 72d71b8d193b7164e9ff445c542f2e74,

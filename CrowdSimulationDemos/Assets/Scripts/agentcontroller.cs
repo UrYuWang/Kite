@@ -14,7 +14,7 @@ public class agentcontroller : MonoBehaviour
     public void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = Random.Range(10.0f, 15.0f);
+        agent.speed = Random.Range(5.0f, 10.0f);
         agent.SetDestination(destination);
         agent.autoRepath = true;
         bs = new boundingstuff(1.1f, 0.9f, 1, GetComponent<Transform>(), agent.nextPosition);
@@ -27,14 +27,16 @@ public class agentcontroller : MonoBehaviour
         Transform t = GetComponent<Transform>();
         if (agent!=null)
             bs.Update(t, agent.nextPosition);
-        if (agent.speed <= float.Epsilon || (agent.destination-transform.position).magnitude <= 1)
+        //if ((agent.destination-transform.position).magnitude <= 1)
+        //{
+        if ((agent.destination - transform.position).magnitude <= 5)
         {
-            if ((agent.destination - transform.position).magnitude <= 1)
-                agent.SetDestination(GetComponent<Transform>().position);
+            agent.SetDestination(GetComponent<Transform>().position);
             anima.SetBool("walk", false);
-            //if ((agent.destination - transform.position).magnitude <= float.Epsilon)
-            //    anima.SetBool("celebrate", true);
         }
+        //if ((agent.destination - transform.position).magnitude <= float.Epsilon)
+        //    anima.SetBool("celebrate", true);
+        //}
         else
         {
             anima.SetBool("walk", true);
