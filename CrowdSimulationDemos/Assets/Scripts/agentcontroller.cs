@@ -7,50 +7,54 @@ public class agentcontroller : MonoBehaviour
 {
     public NavMeshAgent agent;
     public Vector3 destination;
+    public Vector3 cv;
     private Animator anima;
     public boundingstuff bs;
     public bool flag = false;
+    public bool stop = false;
     // Start is called before the first frame update
     public void Start()
     {
+        cv = Vector3.zero;
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = Random.Range(5.0f, 10.0f);
+        //agent.speed = Random.Range(5.0f, 10.0f);
+        agent.speed = 5;
         agent.SetDestination(destination);
         agent.autoRepath = true;
-        bs = new boundingstuff(1.1f, 0.9f, 1, GetComponent<Transform>(), agent.nextPosition);
+        agent.autoBraking = true;
+        bs = new boundingstuff(agent.speed, 1, 1, transform, agent.nextPosition);
         anima = GetComponent<Animator>();
         flag = true;
+        Continue();
     }
 
     public void FixedUpdate()
     {
-        Transform t = GetComponent<Transform>();
-        if (agent!=null)
-            bs.Update(t, agent.nextPosition);
-        //if ((agent.destination-transform.position).magnitude <= 1)
-        //{
-        if ((agent.destination - transform.position).magnitude <= 5)
+        if (agent != null)
+            if (stop)
+                bs.Update(transform, transform.position);
+            else if (agent.nextPosition != null)
+                bs.Update(transform, agent.nextPosition);
+            else
+                bs.Update(transform, transform.position);
+        if (Vector3.Distance(agent.destination, transform.position) <= float.Epsilon||stop)
         {
-            agent.SetDestination(GetComponent<Transform>().position);
+            agent.SetDestination(transform.position);
             anima.SetBool("walk", false);
-        }
-        //if ((agent.destination - transform.position).magnitude <= float.Epsilon)
-        //    anima.SetBool("celebrate", true);
-        //}
-        else
-        {
-            anima.SetBool("walk", true);
-            //anima.SetBool("celebrate", false);
         }
     }
 
     public void Stop()
     {
+        bs.front = 1;
         anima.SetBool("walk", false);
+        stop = true;
     }
 
     public void Continue()
     {
+        bs.front = agent.speed;
         anima.SetBool("walk", true);
+        stop = false;
     }
 }

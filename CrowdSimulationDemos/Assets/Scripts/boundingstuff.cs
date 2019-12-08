@@ -90,22 +90,26 @@ public class boundingstuff
         {
             return Vector3.zero;
         }
+        else if (((forwardp>0)&&(forwardp/front+Mathf.Abs(sidep/side)>1))||((forwardp<0)&&(-forwardp/back+Mathf.Abs(sidep/side)>1)))
+        {
+            return Vector3.zero;
+        }
         else
         {
             Vector3 result = Vector3.zero;
-            if (forwardp <= front && forwardp > 0)
+            if (forwardp < front && forwardp > 0)
             {
                 result += (1 - forwardp / front) * t.forward;
             }
-            else if (forwardp >= -back && forwardp <= 0)
+            else if (forwardp > -back && forwardp < 0)
             {
                 result -= (1 + forwardp / back) * t.forward;
             }
-            if (sidep <= side && sidep > 0)
+            if (sidep < side && sidep > 0)
             {
                 result += (1 - sidep / side) * t.right;
             }
-            else if (sidep >= -side && sidep <= 0)
+            else if (sidep > -side && sidep < 0)
             {
                 result -= (1 + sidep / side) * t.right;
             }
@@ -150,19 +154,20 @@ public class boundingstuff
         }
     }
 
+    // public Vector3 CDs(Vector3 a, Vector3 b, int num, int op)
     public Vector3 CDs(List<Vector3> points, int op)
     {
         if (points.Count == 1)
             return CD(points[0]);
         else
         {
+            Vector3 result = Vector3.zero;
             //if (points.Count == 3)
             //    Debug.Log("3");
             switch (op)
             {
                 case 1://average the reactions
                     {
-                        Vector3 result = Vector3.zero;
                         Vector3 temp;
                         float i = 0;
                         float k;
@@ -172,7 +177,7 @@ public class boundingstuff
                             if (temp != Vector3.zero)
                             {
                                 k = Random.Range(1.0f, 99.0f);
-                                result += temp;
+                                result += k*temp;
                                 i += k;
                             }
                         }
@@ -180,6 +185,7 @@ public class boundingstuff
                         {
                             result /= i;
                         }
+                        //Debug.Log(op + " " + result);
                         return result;
                     }
                 case 2://average the contact points
@@ -190,13 +196,18 @@ public class boundingstuff
                             average += v;
                         }
                         average /= points.Count;
-                        return CD(average);
+                        result = CD(average);
+                        //Debug.Log(op + " " + result);
+                        return result;
                     }
                 case 3://the reaction to a line segment
                     {
-                        return CDline(points);
+                        result = CDline(points);
+                        //Debug.Log(op + " " + result);
+                        return result;
                     }
                 default:
+                    //Debug.Log("Nothing is applied.");
                     return Vector3.zero;
             }
         }
