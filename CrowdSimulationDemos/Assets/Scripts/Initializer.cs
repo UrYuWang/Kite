@@ -10,9 +10,10 @@ public class Initializer : MonoBehaviour
     public int op;
     public GameObject master;
     public GameObject nonmaster;
-    private int[] story_height = new int[3] {1,11,21};
+    private float[] heights = new float[3] { 0.66667f, 10.66667f, 20.66667f };
     private GameObject[] agents;
-    private List<Vector3>[] forces;
+    //private List<Vector3>[] forces;
+    private Vector3[] forces;
     private static int i = 2;
     // private List<Vector2Int> cpair;
     private Stopwatch sw;
@@ -25,12 +26,14 @@ public class Initializer : MonoBehaviour
         skipper = new int[number_of_agents, number_of_agents];
         stop = false;
         // cpair = new List<Vector2Int>();
-        forces = new List<Vector3>[number_of_agents];
+        //forces = new List<Vector3>[number_of_agents];
+        forces = new Vector3[number_of_agents];
         for (int i = 0; i < number_of_agents; i++)
         {
-            //forces[i] = Vector3.zero;
-            forces[i] = new List<Vector3>();
+            forces[i] = Vector3.zero;
+            //forces[i] = new List<Vector3>();
         }
+
         agents = new GameObject[number_of_agents];
         Vector3[] spots = new Vector3[2];
         agentcontroller ascript;
@@ -50,7 +53,6 @@ public class Initializer : MonoBehaviour
     Vector3[] startandend()
     {
         Vector3[] result = new Vector3[2];
-        float[] heights = new float[3] { 0.66667f, 10.66667f, 20.66667f };
         //print(i);
         switch (i)
         {
@@ -105,13 +107,17 @@ public class Initializer : MonoBehaviour
                     continue;
                 }
                 time = (aci.transform.position - acj.transform.position).magnitude / (aci.bs.front + acj.bs.front);
+                skipper[i, j] = (int)time;
                 if (time > 1)
                 {
-                    skipper[i, j] = (int)time;
                     continue;
                 }
-                temp1 = aci.bs.CDs(acj.bs.Steparound(aci.agent.nextPosition), op);
-                temp2 = acj.bs.CDs(aci.bs.Steparound(acj.agent.nextPosition), op);
+                temp1 = aci.bs.CDs(acj.bs.Steparound(aci.transform.position), op);
+                if (Vector3.Angle(temp1, acj.transform.forward) < 90)
+                    temp1 = Vector3.zero;
+                temp2 = acj.bs.CDs(aci.bs.Steparound(acj.transform.position), op);
+                if (Vector3.Angle(temp2, aci.transform.forward) < 90)
+                    temp2 = Vector3.zero;
                 if (temp1 != Vector3.zero || temp2 != Vector3.zero)
                 {
                     float ratioi;
@@ -137,34 +143,38 @@ public class Initializer : MonoBehaviour
                         ratioj = 1 - ratioi;
                     }
                     // cpair.Add(new Vector2Int(i, j));
-                    if (temp2 != Vector3.zero)
-                        //forces[i] += ratioi * (temp2 - temp1)/2;
-                        forces[i].Add(ratioi * (temp2 - temp1) / 2);
-                    if (temp1 != Vector3.zero)
-                        //forces[j] += ratioj * (temp1 - temp2)/2;
-                        forces[j].Add(ratioj * (temp1 - temp2) / 2);
+                    if (temp2 != Vector3.zero && ratioj != 0)
+                        forces[i] += ratioi * temp2;
+                    else if (temp2 != Vector3.zero)
+                        forces[i] += temp2;
+                    if (temp1 != Vector3.zero && ratioi != 0)
+                        forces[j] += ratioj * temp1;
+                    else if (temp1 != Vector3.zero)
+                        forces[j] += temp1;
                 }
                 // else
                     // cpair.Remove(new Vector2Int(i, j));
             }
         }
-        NavMeshHit hit;
+        //NavMeshHit hit;
+        Vector3 cross;
         for (int i = 0; i < number_of_agents; i++)
         {
-            var maxi = Max(forces[i]);
+            //var maxi = Sum(forces[i]);
             var aci = agents[i].GetComponent<agentcontroller>();
-            if (aci.stop) ;
-            //else if (Vector3.Angle(maxi, aci.agent.velocity) < 45||Vector3.Angle(maxi, aci.agent.velocity) > 90) ;
-            else if (maxi != Vector3.zero)
+            if (aci.stop)
+                continue;
+            else if (Vector3.Angle(forces[i], aci.agent.velocity) < 90)
+                continue;
+            else if (forces[i] != Vector3.zero)
             {
-                if (NavMesh.SamplePosition(agents[i].transform.position + ((Vector3.Cross(maxi, agents[i].transform.up).normalized - 0.3f * agents[i].transform.forward).normalized * aci.agent.speed / 10), out hit, 1.0f, NavMesh.AllAreas))
-                {
-                    //print("Move it.");
-                    aci.agent.velocity = aci.agent.velocity * 0.9f + (Vector3.Cross(maxi, agents[i].transform.up).normalized - 0.3f * agents[i].transform.forward).normalized * aci.agent.speed / 10;
-                }
+                //aci.agent.velocity = aci.agent.velocity * 0.9f + (Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.1f * agents[i].transform.forward).normalized * aci.agent.speed / 20;
+                cross = Vector3.Cross(forces[i], agents[i].transform.up);
+                cross = cross.magnitude > 1 ? cross.normalized : cross;
+                aci.agent.velocity = aci.agent.velocity * 0.9f + (cross - 0.1f * aci.transform.forward) * aci.agent.speed / 10;
             }
-            //forces[i] = Vector3.zero;
-            forces[i].Clear();
+            forces[i] = Vector3.zero;
+            //forces[i].Clear();
         }
         stop = true;
         foreach (GameObject agent in agents)
@@ -200,5 +210,19 @@ public class Initializer : MonoBehaviour
             }
         }
         return max;
+    }
+
+    private Vector3 Sum(List<Vector3> forces)
+    {
+        if (forces.Count == 0)
+            return Vector3.zero;
+        else if (forces.Count == 1)
+            return forces[0];
+        Vector3 sum = forces[0];
+        for (int i = 1; i < forces.Count; i++)
+        {
+            sum += forces[i];
+        }
+        return sum;
     }
 }

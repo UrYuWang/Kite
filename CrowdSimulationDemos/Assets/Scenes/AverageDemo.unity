@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 751376263}
-  number_of_agents: 3
+  number_of_agents: 13
   op: 3
   nonmaster: {fileID: 5276621793940294945, guid: 72d71b8d193b7164e9ff445c542f2e74,
     type: 3}

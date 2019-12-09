@@ -117,19 +117,21 @@ public class CrowdGenerator : MonoBehaviour
                 // cpair.Remove(new Vector2Int(i, j));
             }
         }
-        NavMeshHit hit;
+        //NavMeshHit hit;
         for (int i = 0; i < number_of_agents; i++)
         {
             var aci = agents[i].GetComponent<agentcontroller>();
-            if (aci.stop) ;
-            else if (Vector3.Angle(forces[i], aci.agent.velocity) < 90) ;
+            if (aci.stop)
+                continue;
+            else if (Vector3.Angle(forces[i], aci.agent.velocity) < 90)
+                continue;
             else if (forces[i] != Vector3.zero)
             {
-                if (NavMesh.SamplePosition(agents[i].transform.position + ((Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.3f * agents[i].transform.forward).normalized * aci.agent.speed / 10), out hit, 1.0f, NavMesh.AllAreas))
-                {
-                    //print("Move it.");
-                    aci.agent.velocity = aci.agent.velocity * 0.9f + (Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.3f * agents[i].transform.forward).normalized * aci.agent.speed / 10;
-                }
+                //if (NavMesh.SamplePosition(agents[i].transform.position + ((Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.3f * agents[i].transform.forward).normalized * aci.agent.speed / 10), out hit, 1.0f, NavMesh.AllAreas))
+                //{
+                //print("Move it.");
+                aci.agent.velocity = aci.agent.velocity * 0.9f + (Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.1f * agents[i].transform.forward).normalized * aci.agent.speed / 10;
+                //}
             }
             forces[i] = Vector3.zero;
         }
