@@ -16,15 +16,18 @@ public class Initializer : MonoBehaviour
     private Vector3[] forces;
     private static int i = 2;
     // private List<Vector2Int> cpair;
-    private Stopwatch sw;
-    private bool stop;
+    //private Stopwatch sw;
+    //private bool stop;
     private int[,] skipper;
+    //private int ran;
+    private int flipper;
     // Start is called before the first frame update
     void Start()
     {
-        sw = new Stopwatch();
+        //sw = new Stopwatch();
         skipper = new int[number_of_agents, number_of_agents];
-        stop = false;
+        //stop = false;
+        flipper = 0;
         // cpair = new List<Vector2Int>();
         //forces = new List<Vector3>[number_of_agents];
         forces = new Vector3[number_of_agents];
@@ -47,7 +50,8 @@ public class Initializer : MonoBehaviour
             ascript = agents[i].GetComponent<agentcontroller>();
             ascript.destination = spots[1];
         }
-        sw.Start();
+        //ran = -1;
+        //sw.Start();
     }
 
     Vector3[] startandend()
@@ -113,11 +117,11 @@ public class Initializer : MonoBehaviour
                     continue;
                 }
                 temp1 = aci.bs.CDs(acj.bs.Steparound(aci.transform.position), op);
-                if (Vector3.Angle(temp1, acj.transform.forward) < 90)
-                    temp1 = Vector3.zero;
+                //if (Vector3.Angle(temp1, acj.transform.forward) < 90)
+                //temp1 = Vector3.zero;
                 temp2 = acj.bs.CDs(aci.bs.Steparound(acj.transform.position), op);
-                if (Vector3.Angle(temp2, aci.transform.forward) < 90)
-                    temp2 = Vector3.zero;
+                //if (Vector3.Angle(temp2, aci.transform.forward) < 90)
+                    //temp2 = Vector3.zero;
                 if (temp1 != Vector3.zero || temp2 != Vector3.zero)
                 {
                     float ratioi;
@@ -144,11 +148,11 @@ public class Initializer : MonoBehaviour
                     }
                     // cpair.Add(new Vector2Int(i, j));
                     if (temp2 != Vector3.zero && ratioj != 0)
-                        forces[i] += ratioi * temp2;
+                        forces[i] += ratioi * (temp2-temp1)/2;
                     else if (temp2 != Vector3.zero)
                         forces[i] += temp2;
                     if (temp1 != Vector3.zero && ratioi != 0)
-                        forces[j] += ratioj * temp1;
+                        forces[j] += ratioj * (temp1-temp2)/2;
                     else if (temp1 != Vector3.zero)
                         forces[j] += temp1;
                 }
@@ -164,65 +168,72 @@ public class Initializer : MonoBehaviour
             var aci = agents[i].GetComponent<agentcontroller>();
             if (aci.stop)
                 continue;
-            else if (Vector3.Angle(forces[i], aci.agent.velocity) < 90)
+            else if (Vector3.Angle(forces[i], aci.agent.velocity) < 30)
                 continue;
             else if (forces[i] != Vector3.zero)
             {
                 //aci.agent.velocity = aci.agent.velocity * 0.9f + (Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.1f * agents[i].transform.forward).normalized * aci.agent.speed / 20;
                 cross = Vector3.Cross(forces[i], agents[i].transform.up);
                 cross = cross.magnitude > 1 ? cross.normalized : cross;
-                aci.agent.velocity = aci.agent.velocity * 0.9f + (cross - 0.1f * aci.transform.forward) * aci.agent.speed / 10;
+                if (i%2==flipper)
+                    aci.agent.velocity = aci.agent.velocity * 0.9f + (cross + forces[i] / 2 - 0.1f * aci.transform.forward).normalized * aci.agent.speed / 10;
+                if (i == 0)
+                {
+                    print("desired v:" + aci.agent.desiredVelocity);
+                }
             }
             forces[i] = Vector3.zero;
             //forces[i].Clear();
         }
-        stop = true;
-        foreach (GameObject agent in agents)
-        {
-            if (!agent.GetComponent<agentcontroller>().stop)
-            {
-                stop = false;
-                break;
-            }
-        }
-        if (stop)
-        {
-            sw.Stop();
-            print(sw.ElapsedTicks.ToString());
-            Time.timeScale = 0.0f;
-        }
+        //ran *= -1;
+        flipper = 1 - flipper;
+        //stop = true;
+        //foreach (GameObject agent in agents)
+        //{
+        //    if (!agent.GetComponent<agentcontroller>().stop)
+        //    {
+        //        stop = false;
+        //        break;
+        //    }
+        //}
+        //if (stop)
+        //{
+            //sw.Stop();
+            //print(sw.ElapsedTicks.ToString());
+            //Time.timeScale = 0.0f;
+        //}
     }
 
-    private Vector3 Max(List<Vector3> forces)
-    {
-        if (forces.Count == 0)
-            return Vector3.zero;
-        else if (forces.Count == 1)
-            return forces[0];
-        Vector3 max = forces[0];
-        float maxm = max.magnitude;
-        for (int i = 1; i < forces.Count; i++)
-        {
-            if (forces[i].magnitude > maxm)
-            {
-                max = forces[i];
-                maxm = max.magnitude;
-            }
-        }
-        return max;
-    }
+    //private Vector3 Max(List<Vector3> forces)
+    //{
+    //    if (forces.Count == 0)
+    //        return Vector3.zero;
+    //    else if (forces.Count == 1)
+    //        return forces[0];
+    //    Vector3 max = forces[0];
+    //    float maxm = max.magnitude;
+    //    for (int i = 1; i < forces.Count; i++)
+    //    {
+    //        if (forces[i].magnitude > maxm)
+    //        {
+    //            max = forces[i];
+    //            maxm = max.magnitude;
+    //        }
+    //    }
+    //    return max;
+    //}
 
-    private Vector3 Sum(List<Vector3> forces)
-    {
-        if (forces.Count == 0)
-            return Vector3.zero;
-        else if (forces.Count == 1)
-            return forces[0];
-        Vector3 sum = forces[0];
-        for (int i = 1; i < forces.Count; i++)
-        {
-            sum += forces[i];
-        }
-        return sum;
-    }
+    //private Vector3 Sum(List<Vector3> forces)
+    //{
+    //    if (forces.Count == 0)
+    //        return Vector3.zero;
+    //    else if (forces.Count == 1)
+    //        return forces[0];
+    //    Vector3 sum = forces[0];
+    //    for (int i = 1; i < forces.Count; i++)
+    //    {
+    //        sum += forces[i];
+    //    }
+    //    return sum;
+    //}
 }

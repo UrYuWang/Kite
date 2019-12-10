@@ -134,19 +134,19 @@ public class boundingstuff
         else
         {
             float lr = 0, fb = 0;
-            if (forwardp <= front && forwardp > 0)
+            if (forwardp < front && forwardp > 0)
             {
                 fb = 1 - forwardp / front;
             }
-            else if (forwardp >= -back && forwardp <= 0)
+            else if (forwardp > -back && forwardp <= 0)
             {
                 fb = 1 + forwardp / back;
             }
-            if (sidep <= side && sidep > 0)
+            if (sidep < side && sidep > 0)
             {
                 lr = 1 - sidep / side;
             }
-            else if (sidep >= -side && sidep <= 0)
+            else if (sidep > -side && sidep <= 0)
             {
                 lr = 1 + sidep / side;
             }
@@ -157,6 +157,8 @@ public class boundingstuff
     // public Vector3 CDs(Vector3 a, Vector3 b, int num, int op)
     public Vector3 CDs(List<Vector3> points, int op)
     {
+        if (points.Count == 0)
+            return Vector3.zero;
         if (points.Count == 1)
             return CD(points[0]);
         else

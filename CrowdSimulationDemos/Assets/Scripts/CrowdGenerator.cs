@@ -13,14 +13,14 @@ public class CrowdGenerator : MonoBehaviour
     private GameObject[] agents;
     private Vector3[] forces;
     //private List<Vector2Int> cpair;
-    private Stopwatch sw;
-    private bool stop;
+    //private Stopwatch sw;
+    //private bool stop;
     // Start is called before the first frame update
 
     void Start()
     {
-        sw = new Stopwatch();
-        stop = false;
+        //sw = new Stopwatch();
+        //stop = false;
         //cpair = new List<Vector2Int>();
         forces = new Vector3[number_of_agents];
         for (int i = 0; i < number_of_agents; i++)
@@ -37,16 +37,16 @@ public class CrowdGenerator : MonoBehaviour
             ascript = agents[i].GetComponent<agentcontroller>();
             ascript.destination = spots[1];
         }
-        sw.Start();
+        //sw.Start();
     }
 
     private Vector3[] startandend(int i)
     {
         int radius = number_of_agents > 20 ? number_of_agents : 20;
-        float angle = 2*Mathf.PI / number_of_agents;
+        float angle = 2 * Mathf.PI / number_of_agents;
         //print(angle);
         Vector3[] result = new Vector3[2];
-        result[0] = new Vector3(radius * Mathf.Sin(angle*i), 0.66667f, radius * Mathf.Cos(angle*i));
+        result[0] = new Vector3(radius * Mathf.Sin(angle * i), 0.66667f, radius * Mathf.Cos(angle * i));
         result[1] = new Vector3(-result[0].x, result[0].y, -result[0].z);
         return result;
     }
@@ -130,25 +130,25 @@ public class CrowdGenerator : MonoBehaviour
                 //if (NavMesh.SamplePosition(agents[i].transform.position + ((Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.3f * agents[i].transform.forward).normalized * aci.agent.speed / 10), out hit, 1.0f, NavMesh.AllAreas))
                 //{
                 //print("Move it.");
-                aci.agent.velocity = aci.agent.velocity * 0.9f + (Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.1f * agents[i].transform.forward).normalized * aci.agent.speed / 10;
+                aci.agent.velocity = aci.agent.velocity * 0.9f + (Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.1f * agents[i].transform.forward).normalized * aci.agent.speed / 20;
                 //}
             }
             forces[i] = Vector3.zero;
         }
-        stop = true;
-        foreach (GameObject agent in agents)
-        {
-            if (!agent.GetComponent<agentcontroller>().stop)
-            {
-                stop = false;
-                break;
-            }
-        }
-        if (stop)
-        {
-            sw.Stop();
-            //print(sw.ElapsedTicks.ToString());
-            Time.timeScale = 0.0f;
-        }
+        //stop = true;
+        //foreach (GameObject agent in agents)
+        //{
+        //    if (!agent.GetComponent<agentcontroller>().stop)
+        //    {
+        //        stop = false;
+        //        break;
+        //    }
+        //}
+        //if (stop)
+        //{
+        //    sw.Stop();
+        //    //print(sw.ElapsedTicks.ToString());
+        //    Time.timeScale = 0.0f;
+        //}
     }
 }
