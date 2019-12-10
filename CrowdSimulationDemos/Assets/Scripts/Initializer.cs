@@ -116,10 +116,10 @@ public class Initializer : MonoBehaviour
                 {
                     continue;
                 }
-                temp1 = aci.bs.CDs(acj.bs.Steparound(aci.transform.position), op);
+                temp1 = aci.bs.CDs(acj.bs.Steparound(aci.transform.position), aci.transform.position, op);
                 //if (Vector3.Angle(temp1, acj.transform.forward) < 90)
                 //temp1 = Vector3.zero;
-                temp2 = acj.bs.CDs(aci.bs.Steparound(acj.transform.position), op);
+                temp2 = acj.bs.CDs(aci.bs.Steparound(acj.transform.position), acj.transform.position, op);
                 //if (Vector3.Angle(temp2, aci.transform.forward) < 90)
                     //temp2 = Vector3.zero;
                 if (temp1 != Vector3.zero || temp2 != Vector3.zero)

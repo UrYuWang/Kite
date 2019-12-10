@@ -79,13 +79,16 @@ public class boundingstuff
         return result;
     }
 
-    public Vector3 CD(Vector3 point)
+    public Vector3 CD(Vector3 point, Vector3 cp)
     {
         Vector3 connect = point - np;
+        Vector3 pplink = cp - np;
         if (connect.y > 5)
             return Vector3.zero;
         float forwardp = Vector3sum(Vector3.Project(connect, t.forward)) / Vector3sum(t.forward);
+        float forwardpp = Vector3sum(Vector3.Project(pplink, t.forward)) / Vector3sum(t.forward);
         float sidep = Vector3sum(Vector3.Project(connect, t.right)) / Vector3sum(t.right);
+        float sidepp = Vector3sum(Vector3.Project(pplink, t.right)) / Vector3sum(t.right);
         if (forwardp > front || forwardp < -back || sidep > side || sidep < -side)
         {
             return Vector3.zero;
@@ -112,6 +115,25 @@ public class boundingstuff
             else if (sidep > -side && sidep < 0)
             {
                 result -= (1 + sidep / side) * t.right;
+            }
+            else
+            {
+                if (forwardpp > 0)
+                {
+                    result += t.forward;
+                }
+                else if (forwardpp < 0)
+                {
+                    result -= t.forward;
+                }
+                if (sidepp > 0)
+                {
+                    result += t.right;
+                }
+                else if (sidepp < 0)
+                {
+                    result -= t.right;
+                }
             }
             return result;
         }
@@ -155,12 +177,12 @@ public class boundingstuff
     }
 
     // public Vector3 CDs(Vector3 a, Vector3 b, int num, int op)
-    public Vector3 CDs(List<Vector3> points, int op)
+    public Vector3 CDs(List<Vector3> points, Vector3 cp, int op)
     {
         if (points.Count == 0)
             return Vector3.zero;
         if (points.Count == 1)
-            return CD(points[0]);
+            return CD(points[0], cp);
         else
         {
             Vector3 result = Vector3.zero;
@@ -175,7 +197,7 @@ public class boundingstuff
                         float k;
                         foreach (Vector3 p in points)
                         {
-                            temp = CD(p);
+                            temp = CD(p, cp);
                             if (temp != Vector3.zero)
                             {
                                 k = Random.Range(1.0f, 99.0f);
@@ -198,7 +220,7 @@ public class boundingstuff
                             average += v;
                         }
                         average /= points.Count;
-                        result = CD(average);
+                        result = CD(average, cp);
                         //Debug.Log(op + " " + result);
                         return result;
                     }

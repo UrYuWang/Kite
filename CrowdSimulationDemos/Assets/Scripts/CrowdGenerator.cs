@@ -77,8 +77,8 @@ public class CrowdGenerator : MonoBehaviour
                     //skipper[i, j] = (int)time;
                     continue;
                 }
-                temp1 = aci.bs.CDs(acj.bs.Steparound(aci.agent.nextPosition), op);
-                temp2 = acj.bs.CDs(aci.bs.Steparound(acj.agent.nextPosition), op);
+                temp1 = aci.bs.CDs(acj.bs.Steparound(aci.agent.nextPosition), aci.agent.nextPosition, op);
+                temp2 = acj.bs.CDs(aci.bs.Steparound(acj.agent.nextPosition), acj.agent.nextPosition, op);
                 if (temp1 != Vector3.zero || temp2 != Vector3.zero)
                 {
                     float ratioi;
@@ -122,8 +122,6 @@ public class CrowdGenerator : MonoBehaviour
         {
             var aci = agents[i].GetComponent<agentcontroller>();
             if (aci.stop)
-                continue;
-            else if (Vector3.Angle(forces[i], aci.agent.velocity) < 90)
                 continue;
             else if (forces[i] != Vector3.zero)
             {
