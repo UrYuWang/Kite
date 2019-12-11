@@ -20,14 +20,14 @@ public class Initializer : MonoBehaviour
     //private bool stop;
     private int[,] skipper;
     //private int ran;
-    private int flipper;
+    //private int flipper;
     // Start is called before the first frame update
     void Start()
     {
         //sw = new Stopwatch();
         skipper = new int[number_of_agents, number_of_agents];
         //stop = false;
-        flipper = 0;
+        //flipper = 0;
         // cpair = new List<Vector2Int>();
         //forces = new List<Vector3>[number_of_agents];
         forces = new Vector3[number_of_agents];
@@ -83,8 +83,9 @@ public class Initializer : MonoBehaviour
                 }
 
         }
-        i += 1;
-        i %= 3;
+        //i += 1;
+        //i %= 3;
+        i = 2 - i;
         //print(result[0]);
         //print(result[1]);
         return result;
@@ -147,11 +148,11 @@ public class Initializer : MonoBehaviour
                         ratioj = 1 - ratioi;
                     }
                     // cpair.Add(new Vector2Int(i, j));
-                    if (temp2 != Vector3.zero && ratioj != 0)
+                    if (temp2 != Vector3.zero && ratioj > float.Epsilon)
                         forces[i] += ratioi * (temp2-temp1)/2;
                     else if (temp2 != Vector3.zero)
                         forces[i] += temp2;
-                    if (temp1 != Vector3.zero && ratioi != 0)
+                    if (temp1 != Vector3.zero && ratioi > float.Epsilon)
                         forces[j] += ratioj * (temp1-temp2)/2;
                     else if (temp1 != Vector3.zero)
                         forces[j] += temp1;
@@ -168,25 +169,26 @@ public class Initializer : MonoBehaviour
             var aci = agents[i].GetComponent<agentcontroller>();
             if (aci.stop)
                 continue;
-            else if (Vector3.Angle(forces[i], aci.agent.velocity) < 30)
-                continue;
+            //else if (Vector3.Angle(forces[i], aci.agent.velocity) < 30)
+                //continue;
             else if (forces[i] != Vector3.zero)
             {
                 //aci.agent.velocity = aci.agent.velocity * 0.9f + (Vector3.Cross(forces[i], agents[i].transform.up).normalized - 0.1f * agents[i].transform.forward).normalized * aci.agent.speed / 20;
-                cross = Vector3.Cross(forces[i], agents[i].transform.up);
-                cross = cross.magnitude > 1 ? cross.normalized : cross;
-                if (i%2==flipper)
-                    aci.agent.velocity = aci.agent.velocity * 0.9f + (cross + forces[i] / 2 - 0.1f * aci.transform.forward).normalized * aci.agent.speed / 10;
-                if (i == 0)
-                {
-                    print("desired v:" + aci.agent.desiredVelocity);
-                }
+                cross = -Vector3.Cross(forces[i], agents[i].transform.up);
+                //cross = cross.magnitude > 1 ? cross.normalized : cross;
+                //if (i%2==flipper)
+                aci.agent.velocity = aci.agent.velocity * 0.9f + (cross.normalized/20 + forces[i].normalized/10 - 0.05f*aci.transform.forward).normalized * aci.agent.speed / 10;
+                //if (i == 0)
+                //{
+                //    print("desired v:" + aci.agent.desiredVelocity);
+                //}
             }
             forces[i] = Vector3.zero;
+            aci.bs.Update(aci.transform, aci.agent.nextPosition);
             //forces[i].Clear();
         }
         //ran *= -1;
-        flipper = 1 - flipper;
+        //flipper = 1 - flipper;
         //stop = true;
         //foreach (GameObject agent in agents)
         //{

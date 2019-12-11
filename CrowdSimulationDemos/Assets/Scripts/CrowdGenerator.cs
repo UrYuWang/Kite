@@ -132,6 +132,7 @@ public class CrowdGenerator : MonoBehaviour
                 //}
             }
             forces[i] = Vector3.zero;
+            aci.bs.Update(aci.transform, aci.agent.nextPosition);
         }
         //stop = true;
         //foreach (GameObject agent in agents)
