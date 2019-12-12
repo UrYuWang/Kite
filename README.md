@@ -5,4 +5,4 @@ The presentation's URL is here: https://docs.google.com/presentation/d/1cRj1yh4i
 
 The report's URL (Overleaf) is here: https://www.overleaf.com/read/sxjrqgnkvmvj
 
-The report's PDF is provided in this repository.
+The report's PDF is provided in this repository: https://github.com/UrYuWang/Kite-a-2D-bounding-shape-for-human-crowd-simulation/blob/master/828X_Final_project_report.pdf
